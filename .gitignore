@@ -11,4 +11,4 @@ airflow.cfg
 airflow.db
 
 *.json
-*.yml
+configuration.yml
