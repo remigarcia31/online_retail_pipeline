@@ -52,7 +52,7 @@ def retail():
             filetype=FileType.CSV,  # Type du fichier (CSV)
         ),
         output_table=Table(
-            name='raw_invoices',  # Nom de la table BigQuery cible
+            name='raw_transactions',  # Nom de la table BigQuery cible
             conn_id='gcp',  # Connexion à Google Cloud Platform
             metadata=Metadata(schema='retail')  # Schéma BigQuery dans lequel créer la table
         ),
