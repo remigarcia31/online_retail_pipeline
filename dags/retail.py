@@ -61,5 +61,28 @@ def retail():
 
     # Définition de la séquence d'exécution des tâches
     upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw
+    
+    @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')
+    def check_load(scan_name='check_load', checks_subpath='sources'):
+        """
+        Tâche Airflow pour exécuter un scan Soda en utilisant un environnement Python virtuel.
+
+        Args:
+            scan_name (str, optional): Nom unique pour le scan Soda. Défaut : 'check_load'.
+            checks_subpath (str, optional): Sous-chemin pour les fichiers de vérification Soda. Défaut : 'sources'.
+
+        Returns:
+            int: Résultat du scan Soda (0 si réussi, autre chose en cas d'échec).
+        """
+        # Importation de la fonction `check` définie dans le répertoire `include/soda`
+        from include.soda.check_function import check
+
+        # Exécution de la fonction `check` avec les paramètres fournis
+        return check(scan_name, checks_subpath)
+
+    # Appel de la tâche pour l'exécuter dans le DAG
+    check_load()
+
 
 retail()
+
