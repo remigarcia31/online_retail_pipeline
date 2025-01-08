@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: retail
+    database: online-retail-sales-446917
+
+    tables:
+      - name: raw_transactions
+			- name: country
