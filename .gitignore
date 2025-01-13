@@ -17,3 +17,5 @@ include/dbt/dbt_packages
 include/dbt/target
 include/dbt/logs
 .user.yml
+
+include/metabase-data
