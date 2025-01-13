@@ -99,5 +99,26 @@ def retail():
         )
     )
 
+    @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')  
+    def check_transform(scan_name='check_transform', checks_subpath='transform'):
+        """
+        Tâche Airflow utilisant un environnement Python externe pour exécuter un scan Soda.
+
+        Args:
+            scan_name (str, optional): Nom unique pour le scan Soda. Défaut : 'check_transform'.
+            checks_subpath (str, optional): Sous-chemin pour les fichiers de vérification Soda. Défaut : 'transform'.
+
+        Returns:
+            int: Résultat du scan Soda (0 si réussi, autre chose en cas d'échec).
+        """
+        # Importation de la fonction `check` définie dans le répertoire `include/soda`
+        from include.soda.check_function import check
+
+        # Exécution de la fonction `check` avec les paramètres fournis
+        return check(scan_name, checks_subpath)
+
+    # Appel explicite de la tâche pour qu'elle soit incluse dans le DAG
+    check_transform()
+
 
 retail()
