@@ -12,3 +12,8 @@ airflow.db
 
 *.json
 configuration.yml
+
+include/dbt/dbt_packages
+include/dbt/target
+include/dbt/logs
+.user.yml
