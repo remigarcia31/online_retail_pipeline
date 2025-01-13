@@ -1,4 +1,4 @@
-checks for fct_invoices:
+checks for fact_invoices:
   # Check fails when invoice_id, quantity, total is missing or
   # when the data type of those columns is other than specified
   - schema:
@@ -20,5 +20,5 @@ checks for fct_invoices:
       name: All invoices have a positive total amount
       fail query: |
         SELECT invoice_id, total
-        FROM fct_invoices
+        FROM fact_invoices
         WHERE total < 0
