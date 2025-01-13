@@ -1,0 +1,4 @@
+checks for report_product_invoices:
+  # Check fails if the total quanity sold is lower or equal to 0
+  - min(total_quantity_sold):
+      fail: when <= 0
