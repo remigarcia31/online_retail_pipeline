@@ -6,4 +6,4 @@ sources:
 
     tables:
       - name: raw_transactions
-			- name: country
+      - name: country
