@@ -17,6 +17,8 @@ from cosmos.airflow.task_group import DbtTaskGroup
 from cosmos.constants import LoadMode
 from cosmos.config import ProjectConfig, RenderConfig
 
+from airflow.models.baseoperator import chain
+
 # Définition du DAG avec ses paramètres principaux
 @dag(
     start_date=datetime(2025, 1, 1),  # Date de début d'exécution du DAG
@@ -64,8 +66,6 @@ def retail():
         use_native_support=False,  # Désactive l'utilisation de fonctions natives pour un contrôle précis
     )
 
-    # Définition de la séquence d'exécution des tâches
-    # upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw
     
     @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')
     def check_load(scan_name='check_load', checks_subpath='sources'):
@@ -85,8 +85,6 @@ def retail():
         # Exécution de la fonction `check` avec les paramètres fournis
         return check(scan_name, checks_subpath)
 
-    # Appel de la tâche pour l'exécuter dans le DAG
-    check_load()
 
     # Transformation des données avec dbt
     transform = DbtTaskGroup(
@@ -117,8 +115,6 @@ def retail():
         # Exécution de la fonction `check` avec les paramètres fournis
         return check(scan_name, checks_subpath)
 
-    # Appel explicite de la tâche pour qu'elle soit incluse dans le DAG
-    check_transform()
 
     # Création d'un groupe de tâches DbtTaskGroup pour les rapports
     report = DbtTaskGroup(
@@ -131,7 +127,34 @@ def retail():
         )
     )
 
-    report()  # Appel de la tâche pour l'exécuter dans le DAG
+    @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')  
+    def check_report(scan_name='check_report', checks_subpath='report'):
+        """
+        Tâche Airflow pour exécuter un scan Soda sur les données des rapports, en utilisant un environnement Python virtuel.
 
+        Args:
+            scan_name (str, optional): Nom unique pour le scan Soda. Par défaut : 'check_report'.
+            checks_subpath (str, optional): Sous-chemin des fichiers de vérification Soda. Par défaut : 'report'.
+
+        Returns:
+            int: Résultat du scan Soda (0 si réussi, autre chose en cas d'échec).
+        """
+        # Importation de la fonction `check` définie dans le module `include.soda.check_function`
+        from include.soda.check_function import check
+
+        # Exécution de la fonction `check` avec les paramètres fournis
+        return check(scan_name, checks_subpath)
+
+    # Définition de la séquence d'exécution des tâches
+    chain(
+        upload_csv_to_gcs,
+        create_retail_dataset,
+        gcs_to_raw,
+        check_load(),
+        transform,
+        check_transform(),
+        report,
+        check_report()
+    )
 
 retail()
