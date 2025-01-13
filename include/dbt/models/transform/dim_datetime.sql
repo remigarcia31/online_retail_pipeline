@@ -4,11 +4,11 @@ WITH datetime_cte AS (
     TransactionDate AS datetime_id,
     CASE
       WHEN LENGTH(TransactionDate) = 10 THEN
-        -- Date format: "DD/MM/YYYY"
-        PARSE_DATETIME('%m/%d/%Y', TransactionDate)
+        -- Date format: "YYYY/MM/DD"
+        PARSE_DATETIME('%Y-%m-%d', TransactionDate)
       WHEN LENGTH(TransactionDate) <= 8 THEN
-        -- Date format: "MM/DD/YY"
-        PARSE_DATETIME('%m/%d/%y', TransactionDate)
+        -- Date format: "YY/MM/DD"
+        PARSE_DATETIME('%Y-%m-%d', TransactionDate)
       ELSE
         NULL
     END AS date_part,
