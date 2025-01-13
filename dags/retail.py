@@ -120,5 +120,18 @@ def retail():
     # Appel explicite de la tâche pour qu'elle soit incluse dans le DAG
     check_transform()
 
+    # Création d'un groupe de tâches DbtTaskGroup pour les rapports
+    report = DbtTaskGroup(
+        group_id='report',  # Identifiant unique du groupe de tâches
+        project_config=DBT_PROJECT_CONFIG,  # Configuration du projet dbt
+        profile_config=DBT_CONFIG,  # Configuration du profil dbt
+        render_config=RenderConfig(
+            load_method=LoadMode.DBT_LS,  # Méthode de chargement pour dbt (DBT_LS indique le chargement depuis le système de fichiers)
+            select=['path:models/report']  # Sélection spécifique des modèles à inclure dans le rendu
+        )
+    )
+
+    report()  # Appel de la tâche pour l'exécuter dans le DAG
+
 
 retail()
