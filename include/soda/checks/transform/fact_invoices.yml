@@ -6,7 +6,7 @@ checks for fact_invoices:
         when required column missing: 
           [invoice_id, product_id, customer_id, datetime_id, quantity, total]
         when wrong column type:
-          invoice_id: string
+          invoice_id: int
           product_id: string
           customer_id: string
           datetime_id: string
