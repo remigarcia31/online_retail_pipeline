@@ -1,10 +1,10 @@
 checks for raw_transactions:
   - schema:
       fail:
-        when required column missing: [TransactionID, Date, CustomerID, Gender, Age, ProductCategory, Quantity, PricePerUnit, TotalAmount]
+        when required column missing: [TransactionID, TransactionDate, CustomerID, Gender, Age, ProductCategory, Quantity, PricePerUnit, TotalAmount]
         when wrong column type:
           TransactionID: integer
-          Date: string
+          TransactionDate: string
           CustomerID: string
           Gender: string
           Age: integer
