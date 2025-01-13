@@ -12,6 +12,11 @@ from astro.files import File
 from astro.sql.table import Table, Metadata
 from astro.constants import FileType
 
+from include.dbt.cosmos_config import DBT_PROJECT_CONFIG, DBT_CONFIG
+from cosmos.airflow.task_group import DbtTaskGroup
+from cosmos.constants import LoadMode
+from cosmos.config import ProjectConfig, RenderConfig
+
 # Définition du DAG avec ses paramètres principaux
 @dag(
     start_date=datetime(2025, 1, 1),  # Date de début d'exécution du DAG
@@ -60,7 +65,7 @@ def retail():
     )
 
     # Définition de la séquence d'exécution des tâches
-    upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw
+    # upload_csv_to_gcs >> create_retail_dataset >> gcs_to_raw
     
     @task.external_python(python='/usr/local/airflow/soda_venv/bin/python')
     def check_load(scan_name='check_load', checks_subpath='sources'):
@@ -83,6 +88,16 @@ def retail():
     # Appel de la tâche pour l'exécuter dans le DAG
     check_load()
 
+    # Transformation des données avec dbt
+    transform = DbtTaskGroup(
+        group_id='transform',  # Groupe de tâches dbt
+        project_config=DBT_PROJECT_CONFIG,  # Configuration dbt (projet)
+        profile_config=DBT_CONFIG,  # Configuration dbt (profil)
+        render_config=RenderConfig(  # Configuration de rendu des transformations
+            load_method=LoadMode.DBT_LS,  # Méthode de chargement basée sur `dbt ls`
+            select=['path:models/transform']  # Modèles dbt sélectionnés pour cette étape
+        )
+    )
+
 
 retail()
-
