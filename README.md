@@ -10,7 +10,7 @@ Ce pipeline est idéal pour les entreprises souhaitant analyser leurs données d
 ## Objectifs
 
 - Automatiser le traitement des données de transactions de vente en ligne.
-- Nettoyer (Jupyter noteboook) et transformer les données pour les rendre prêtes à l'analyse (DBT).
+- Nettoyer (Jupyter notebook) et transformer les données pour les rendre prêtes à l'analyse (DBT).
 - Charger les données transformées dans une base de données ou un système de stockage adapté pour des analyses avancées.
 - Orchestrer les processus avec Apache Airflow
 - Faire des quality checks avec Soda.io
