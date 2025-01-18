@@ -4,6 +4,7 @@
 
 Le projet Online Retail Pipeline est un pipeline de données conçu pour traiter les transactions de vente en ligne. 
 Il met en œuvre un processus ETL (Extraction, Transformation, Chargement) permettant de préparer les données brutes pour l'analyse et la visualisation. 
+
 Ce pipeline est idéal pour les entreprises souhaitant analyser leurs données de ventes afin de mieux comprendre leurs performances et comportements clients.
 
 ## Objectifs
